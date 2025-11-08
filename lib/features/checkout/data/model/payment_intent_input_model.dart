@@ -1,8 +1,8 @@
-class Payment_intent_input_model {
+class PaymentIntentInputModel {
   final String amount;
   final String currency;
 
-  Payment_intent_input_model({required this.amount, required this.currency});
+  PaymentIntentInputModel({required this.amount, required this.currency});
 
   toJson() {
     return {'amount': amount, 'currency': currency};
