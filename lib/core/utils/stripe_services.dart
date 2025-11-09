@@ -1,3 +1,4 @@
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:paypal_integreation/core/utils/api_keys.dart';
 import 'package:paypal_integreation/core/utils/api_service.dart';
 import 'package:paypal_integreation/features/checkout/data/model/payment_intent_input_model.dart';
@@ -21,5 +22,12 @@ class StripeServices {
     return paymantIntentModel;
   }
 
-  Future initPaymentSheet() async {}
+  Future initPaymentSheet({required String paymentIntentClientSecret}) async {
+    Stripe.instance.initPaymentSheet(
+      paymentSheetParameters: SetupPaymentSheetParameters(
+        paymentIntentClientSecret: paymentIntentClientSecret,
+        merchantDisplayName: "Mohammed Hussien",
+      ),
+    );
+  }
 }
