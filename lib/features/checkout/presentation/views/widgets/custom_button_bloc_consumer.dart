@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paypal_integreation/features/checkout/data/model/payment_intent_input_model.dart';
 import 'package:paypal_integreation/features/checkout/presentation/manger/payment_cubit.dart';
 import 'package:paypal_integreation/features/checkout/presentation/views/widgets/thank_you_view.dart';
 
@@ -30,10 +31,11 @@ class CustomButtonBlocConsumer extends StatelessWidget {
           isLoading: state is PaymentLoading ? true : false,
           txt: "Continue",
           onPressed: () {
-            Navigator.push(
+            PaymentIntentInputModel paymentIntentInputModel =
+                PaymentIntentInputModel(amount: '100', currency: "USD");
+            BlocProvider.of<PaymentCubit>(
               context,
-              MaterialPageRoute(builder: (context) => PaymentDetails()),
-            );
+            ).makePayment(paymentIntentInputModel: paymentIntentInputModel);
           },
         );
       },
