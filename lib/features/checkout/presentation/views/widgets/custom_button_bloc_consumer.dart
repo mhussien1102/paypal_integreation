@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
+import 'package:paypal_integreation/core/utils/api_keys.dart';
 import 'package:paypal_integreation/features/checkout/data/model/amount_model/amount_model.dart';
 import 'package:paypal_integreation/features/checkout/data/model/amount_model/deatils.dart';
 import 'package:paypal_integreation/features/checkout/data/model/item_list_model/item.dart';
@@ -48,63 +49,62 @@ class CustomButtonBlocConsumer extends StatelessWidget {
             // BlocProvider.of<PaymentCubit>(
             //   context,
             // ).makePayment(paymentIntentInputModel: paymentIntentInputModel);
-            var amount = AmountModel(
-              currency: "USD",
-              details: Details(
-                shipping: "0",
-                shippingDiscount: 0,
-                subtotal: "100",
-              ),
-              total: "100",
-            );
-
-            List<OrderItemModel> orders = [
-              OrderItemModel(
-                currency: "USD",
-                name: "Apple",
-                price: "4",
-                quantity: 10,
-              ),
-              OrderItemModel(
-                currency: "USD",
-                name: "Banana",
-                price: "5",
-                quantity: 12,
-              ),
-            ];
-            var itemList = ItemListModel(items: orders);
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) => PaypalCheckoutView(
-                  sandboxMode: true,
-                  clientId: "YOUR CLIENT ID",
-                  secretKey: "YOUR SECRET KEY",
-                  transactions: [
-                    {
-                      "amount": amount.toJson,
-                      "description": "The payment transaction description.",
-                      "item_list": itemList.toJson(),
-                    },
-                  ],
-                  note: "Contact us for any questions on your order.",
-                  onSuccess: (Map params) async {
-                    log("onSuccess: $params");
-                    Navigator.pop(context);
-                  },
-                  onError: (error) {
-                    log("onError: $error");
-                    Navigator.pop(context);
-                  },
-                  onCancel: () {
-                    print('cancelled:');
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            );
+            var transicationData = getTranscationData();
+            excutePaypalPayment(context, transicationData);
           },
         );
       },
     );
+  }
+
+  void excutePaypalPayment(
+    BuildContext context,
+    ({AmountModel amount, ItemListModel itemList}) transicationData,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => PaypalCheckoutView(
+          sandboxMode: true,
+          clientId: ApiKeys.clientId,
+          secretKey: ApiKeys.secretKey,
+          transactions: [
+            {
+              "amount": transicationData.amount.toJson(),
+              "description": "The payment transaction description.",
+              "item_list": transicationData.itemList..toJson(),
+            },
+          ],
+          note: "Contact us for any questions on your order.",
+          onSuccess: (Map params) async {
+            log("onSuccess: $params");
+            Navigator.pop(context);
+          },
+          onError: (error) {
+            log("onError: $error");
+            Navigator.pop(context);
+          },
+          onCancel: () {
+            print('cancelled:');
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+
+  ({AmountModel amount, ItemListModel itemList}) getTranscationData() {
+    var amount = AmountModel(
+      currency: "USD",
+      details: Details(shipping: "0", shippingDiscount: 0, subtotal: "100"),
+      total: "100",
+    );
+
+    List<OrderItemModel> orders = [
+      OrderItemModel(currency: "USD", name: "Apple", price: "4", quantity: 10),
+      OrderItemModel(currency: "USD", name: "Banana", price: "5", quantity: 12),
+    ];
+    var itemList = ItemListModel(items: orders);
+
+    return (amount: amount, itemList: itemList);
   }
 }
