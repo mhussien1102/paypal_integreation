@@ -5,15 +5,20 @@
 /// price : "10"
 /// currency : "USD"
 
-class Items {
-  Items({String? name, num? quantity, String? price, String? currency}) {
+class OrderItemModel {
+  OrderItemModel({
+    String? name,
+    num? quantity,
+    String? price,
+    String? currency,
+  }) {
     _name = name;
     _quantity = quantity;
     _price = price;
     _currency = currency;
   }
 
-  Items.fromJson(dynamic json) {
+  OrderItemModel.fromJson(dynamic json) {
     _name = json['name'];
     _quantity = json['quantity'];
     _price = json['price'];
@@ -25,12 +30,12 @@ class Items {
   String? _price;
   String? _currency;
 
-  Items copyWith({
+  OrderItemModel copyWith({
     String? name,
     num? quantity,
     String? price,
     String? currency,
-  }) => Items(
+  }) => OrderItemModel(
     name: name ?? _name,
     quantity: quantity ?? _quantity,
     price: price ?? _price,

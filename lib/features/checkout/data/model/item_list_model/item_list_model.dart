@@ -5,7 +5,7 @@ import 'item.dart';
 /// items : [{"name":"Apple","quantity":4,"price":"10","currency":"USD"},{"name":"Pineapple","quantity":5,"price":"12","currency":"USD"}]
 
 class ItemListModel {
-  ItemListModel({List<Items>? items}) {
+  ItemListModel({List<OrderItemModel>? items}) {
     _items = items;
   }
 
@@ -13,17 +13,17 @@ class ItemListModel {
     if (json['items'] != null) {
       _items = [];
       json['items'].forEach((v) {
-        _items?.add(Items.fromJson(v));
+        _items?.add(OrderItemModel.fromJson(v));
       });
     }
   }
 
-  List<Items>? _items;
+  List<OrderItemModel>? _items;
 
-  ItemListModel copyWith({List<Items>? items}) =>
+  ItemListModel copyWith({List<OrderItemModel>? items}) =>
       ItemListModel(items: items ?? _items);
 
-  List<Items>? get items => _items;
+  List<OrderItemModel>? get items => _items;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
