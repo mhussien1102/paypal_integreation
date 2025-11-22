@@ -66,7 +66,7 @@ class CustomButtonBlocConsumer extends StatelessWidget {
         builder: (BuildContext context) => PaypalCheckoutView(
           sandboxMode: true,
           clientId: ApiKeys.clientId,
-          secretKey: ApiKeys.secretKey,
+          secretKey: ApiKeys.clientSecret,
           transactions: [
             {
               "amount": transicationData.amount.toJson(),
