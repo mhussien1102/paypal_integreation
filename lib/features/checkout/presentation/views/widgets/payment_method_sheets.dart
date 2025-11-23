@@ -5,8 +5,24 @@ import 'package:paypal_integreation/features/checkout/presentation/views/widgets
 import '../../../../../core/widgets/custom_button.dart';
 import '../payment_details.dart';
 
-class PaymentMethodsSheets extends StatelessWidget {
+class PaymentMethodsSheets extends StatefulWidget {
   const PaymentMethodsSheets({super.key});
+
+  @override
+  State<PaymentMethodsSheets> createState() => _PaymentMethodsSheetsState();
+}
+
+class _PaymentMethodsSheetsState extends State<PaymentMethodsSheets> {
+  bool isPaypal = false;
+
+  updatePaymentMeethod({required int index}) {
+    if (index == 0) {
+      isPaypal = false;
+    } else {
+      isPaypal = true;
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +32,9 @@ class PaymentMethodsSheets extends StatelessWidget {
         // Removed const from here
         mainAxisSize: MainAxisSize.min,
         children: [
-          PaymentMethodListView(),
+          PaymentMethodListView(updatePaymentMethod: updatePaymentMeethod),
           SizedBox(height: 16),
-          CustomButtonBlocConsumer(),
+          CustomButtonBlocConsumer(payPal: isPaypal),
         ],
       ),
     );

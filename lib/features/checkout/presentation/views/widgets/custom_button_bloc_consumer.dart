@@ -16,7 +16,9 @@ import '../../../../../core/widgets/custom_button.dart';
 import '../payment_details.dart';
 
 class CustomButtonBlocConsumer extends StatelessWidget {
-  const CustomButtonBlocConsumer({super.key});
+  const CustomButtonBlocConsumer({super.key, required this.payPal});
+
+  final bool payPal;
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +42,27 @@ class CustomButtonBlocConsumer extends StatelessWidget {
           isLoading: state is PaymentLoading ? true : false,
           txt: "Continue",
           onPressed: () {
-            // PaymentIntentInputModel paymentIntentInputModel =
-            //     PaymentIntentInputModel(
-            //       amount: '100',
-            //       currency: "USD",
-            //       customerId: 'cus_TQd812GRHioqjd',
-            //     );
-            // BlocProvider.of<PaymentCubit>(
-            //   context,
-            // ).makePayment(paymentIntentInputModel: paymentIntentInputModel);
-            var transicationData = getTranscationData();
-            excutePaypalPayment(context, transicationData);
+            if (payPal) {
+              var transicationData = getTranscationData();
+              excutePaypalPayment(context, transicationData);
+            } else {
+              excuteStripePayment(context);
+            }
           },
         );
       },
     );
+  }
+
+  void excuteStripePayment(BuildContext context) {
+    PaymentIntentInputModel paymentIntentInputModel = PaymentIntentInputModel(
+      amount: '100',
+      currency: "USD",
+      customerId: 'cus_TQd812GRHioqjd',
+    );
+    BlocProvider.of<PaymentCubit>(
+      context,
+    ).makePayment(paymentIntentInputModel: paymentIntentInputModel);
   }
 
   void excutePaypalPayment(

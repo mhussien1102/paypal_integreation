@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'cart_payment.dart';
 
 class PaymentMethodListView extends StatefulWidget {
-  const PaymentMethodListView({super.key});
+  const PaymentMethodListView({super.key, required this.updatePaymentMethod});
+
+  final Function({required int index}) updatePaymentMethod;
   @override
   State<PaymentMethodListView> createState() => _PaymentMethodListViewState();
 }
@@ -12,7 +14,6 @@ class _PaymentMethodListViewState extends State<PaymentMethodListView> {
   final List<String> paymentMethodItems = const [
     "assets/images/SVGRepo_iconCarrier.svg",
     'assets/images/Group.svg',
-    'assets/images/Group1.svg',
   ];
   int activeIndex = 0;
   @override
@@ -28,6 +29,7 @@ class _PaymentMethodListViewState extends State<PaymentMethodListView> {
             child: GestureDetector(
               onTap: () {
                 activeIndex = index;
+                widget.updatePaymentMethod(index: activeIndex);
                 setState(() {});
               },
               child: CardPayment(

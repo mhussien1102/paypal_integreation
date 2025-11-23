@@ -22,7 +22,9 @@ class _PaymentDetailsBodyState extends State<PaymentDetailsBody> {
       child: CustomScrollView(
         slivers: [
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
-          const SliverToBoxAdapter(child: PaymentMethodListView()),
+          // const SliverToBoxAdapter(
+          //   child: PaymentMethodListView(updatePaymentMethod: (int index) {}),
+          // ),
           const SliverToBoxAdapter(child: SizedBox(height: 34)),
           SliverToBoxAdapter(
             child: CustomCreditCard(
