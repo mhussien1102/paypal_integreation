@@ -10,8 +10,12 @@ import 'package:paypal_integreation/features/checkout/data/model/item_list_model
 import 'package:paypal_integreation/features/checkout/data/model/item_list_model/item_list_model.dart';
 import 'package:paypal_integreation/features/checkout/data/model/payment_intent_input_model.dart';
 import 'package:paypal_integreation/features/checkout/presentation/manger/payment_cubit.dart';
+import 'package:paypal_integreation/features/checkout/presentation/views/my_cart_view.dart';
 import 'package:paypal_integreation/features/checkout/presentation/views/widgets/thank_you_view.dart';
 
+import '../../../../../core/methods/excute_pay_pal.dart';
+import '../../../../../core/methods/excute_stripe_payment.dart';
+import '../../../../../core/methods/get_transcation.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../payment_details.dart';
 
@@ -52,77 +56,5 @@ class CustomButtonBlocConsumer extends StatelessWidget {
         );
       },
     );
-  }
-
-  void excuteStripePayment(BuildContext context) {
-    PaymentIntentInputModel paymentIntentInputModel = PaymentIntentInputModel(
-      amount: '100',
-      currency: "USD",
-      customerId: 'cus_TQd812GRHioqjd',
-    );
-    BlocProvider.of<PaymentCubit>(
-      context,
-    ).makePayment(paymentIntentInputModel: paymentIntentInputModel);
-  }
-
-  void excutePaypalPayment(
-    BuildContext context,
-    ({AmountModel amount, ItemListModel itemList}) transicationData,
-  ) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) => PaypalCheckoutView(
-          sandboxMode: true,
-          clientId: ApiKeys.clientId,
-          secretKey: ApiKeys.clientSecret,
-          transactions: [
-            {
-              "amount": transicationData.amount.toJson(),
-              "description": "The payment transaction description.",
-              "item_list": transicationData.itemList..toJson(),
-            },
-          ],
-          note: "Contact us for any questions on your order.",
-          onSuccess: (Map params) async {
-            log("onSuccess: $params");
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => ThankYouView()),
-              (route) {
-                if (route.settings.name == '/') {
-                  return true;
-                } else {
-                  return false;
-                }
-              },
-            );
-          },
-          onError: (error) {
-            log("onError: $error");
-            Navigator.pop(context);
-          },
-          onCancel: () {
-            print('cancelled:');
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    );
-  }
-
-  ({AmountModel amount, ItemListModel itemList}) getTranscationData() {
-    var amount = AmountModel(
-      currency: "USD",
-      details: Details(shipping: "0", shippingDiscount: 0, subtotal: "100"),
-      total: "100",
-    );
-
-    List<OrderItemModel> orders = [
-      OrderItemModel(currency: "USD", name: "Apple", price: "4", quantity: 10),
-      OrderItemModel(currency: "USD", name: "Banana", price: "5", quantity: 12),
-    ];
-    var itemList = ItemListModel(items: orders);
-
-    return (amount: amount, itemList: itemList);
   }
 }
